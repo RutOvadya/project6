@@ -1,68 +1,68 @@
 const express = require('express');
 const router = express.Router();
+const mysql = require('mysql2');
 
-// // GET /users
-// router.get('/', (req, res) => {
-//   // Logic to fetch all users
-// });
+// Database connection
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '2424',
+  database: 'project6',
+});
 
-// // POST /users
-// router.post('/', (req, res) => {
-//   // Logic to create a new user
-// });
-
-// GET all users
-
+// Get all users
 router.get('/', (req, res) => {
-    const sql = 'SELECT * FROM users';
-    db.query(sql, (err, results) => {
-      if (err) {
-        console.error('Error executing the query: ', err);
-        return res.status(500).json({ error: 'An error occurred' });
-      }
-      res.json(results);
-    });
+  db.query('SELECT * FROM users', (err, results) => {
+    if (err) {
+      console.error('Error getting users: ', err);
+      res.status(500).json({ error: 'Error getting users' });
+      return;
+    }
+    res.json(results);
   });
-  
-  // POST a new user
-  router.post('/', (req, res) => {
-    const { name, email } = req.body;
-    const sql = 'INSERT INTO users (name, email) VALUES (?, ?)';
-    db.query(sql, [name, email], (err, result) => {
-      if (err) {
-        console.error('Error executing the query: ', err);
-        return res.status(500).json({ error: 'An error occurred' });
-      }
-      res.status(201).json({ message: 'User created successfully' });
-    });
+});
+
+// Create a new user
+router.post('/', (req, res) => {
+  //  name VARCHAR(255), username VARCHAR(255), email VARCHAR(255), address VARCHAR(255), phone VARCHAR(255))"
+  const { name, username, email, address, phone } = req.body;
+  db.query('INSERT INTO users (name, username, email, address, phone) VALUES (?, ?, ?, ?, ?)', [name, username, email, address, phone], (err, results) => {
+    if (err) {
+      console.error('Error creating user: ', err);
+      res.status(500).json({ error: 'Error creating user' });
+      return;
+    }
+    res.json({ message: 'User created successfully' });
   });
-  
-  // PUT (update) a user
-  router.put('/', (req, res) => {
-    const userId = req.params.id;
-    const { name, email } = req.body;
-    const sql = 'UPDATE users SET name = ?, email = ? WHERE id = ?';
-    db.query(sql, [name, email, userId], (err, result) => {
-      if (err) {
-        console.error('Error executing the query: ', err);
-        return res.status(500).json({ error: 'An error occurred' });
-      }
-      res.json({ message: 'User updated successfully' });
-    });
+});
+
+
+// Update a user
+router.put('/:id', (req, res) => {
+  const userId = req.params.id;
+  const { name, email, password } = req.body;
+  db.query('UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?', [name, email, password, userId], (err, results) => {
+    if (err) {
+      console.error('Error updating user: ', err);
+      res.status(500).json({ error: 'Error updating user' });
+      return;
+    }
+    res.json({ message: 'User updated successfully' });
   });
-  
-  // DELETE a user
-  router.delete('/', (req, res) => {
-    const userId = req.params.id;
-    const sql = 'DELETE FROM users WHERE id = ?';
-    db.query(sql, [userId], (err, result) => {
-      if (err) {
-        console.error('Error executing the query: ', err);
-        return res.status(500).json({ error: 'An error occurred' });
-      }
-      res.json({ message: 'User deleted successfully' });
-    });
+});
+
+// Delete a user
+router.delete('/:id', (req, res) => {
+  const userId = req.params.id;
+  db.query('DELETE FROM users WHERE id = ?', [userId], (err, results) => {
+    if (err) {
+      console.error('Error deleting user: ', err);
+      res.status(500).json({ error: 'Error deleting user' });
+      return;
+    }
+    res.json({ message: 'User deleted successfully' });
   });
+});
 
 module.exports = router;
 

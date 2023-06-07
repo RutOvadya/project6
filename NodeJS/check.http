@@ -1,2 +1,18 @@
-GET http://localhost:3000/users
+# GET http://localhost:3000/users
+# Content-Type: application/json
+
+POST http://localhost:3000/users
 Content-Type: application/json
+
+{
+  "name": "Rut Doe",
+  "username": "r",
+  "email": "johndoe@example.com",
+  "address": "mypassword",
+  "phone": "058"
+}
+
+#    var sql = "CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), username VARCHAR(255), email VARCHAR(255), address VARCHAR(255), phone VARCHAR(255))";
+
+# # DELETE http://localhost:3000/users/11
+# DELETE http://localhost:3000/users/12
