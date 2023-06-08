@@ -11,7 +11,7 @@ const db = mysql.createConnection({
 });
 
 // Get all users
-router.get('/', (res) => {
+router.get('/', (req,res) => {
   db.query('SELECT * FROM users', (err, results) => {
     if (err) {
       console.error('Error getting users: ', err);
