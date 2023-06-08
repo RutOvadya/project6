@@ -58,9 +58,9 @@ router.post('/', (req, res) => {
 
 
 // Update a post
-router.put('/:id', (req, res) => {
-  const postId = req.params.id;
-  const userId = req.params.userId;
+router.put('/:id/:postId', (req, res) => {
+    const postId = req.params.postId;
+    const userId = req.params.id;
   const { title, body } = req.body;
   db.query('UPDATE posts SET title = ?, body = ? WHERE id = ? AND userID = ?', [title, body ,postId, userId], (err, results) => {
   if (err) {

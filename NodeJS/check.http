@@ -1,6 +1,6 @@
 #CHECK THE USERS FUNCTIONS
-GET http://localhost:3000/users
-Content-Type: application/json
+# GET http://localhost:3000/users
+# Content-Type: application/json
 
 # GET http://localhost:3000/users/1
 # Content-Type: application/json
@@ -46,3 +46,19 @@ Content-Type: application/json
 # }
 
 # DELETE http://localhost:3000/posts/101
+
+# PUT http://localhost:3000/posts/1/2
+# Content-Type: application/json
+
+# {
+#     "title" :"qui est esse",
+#     "body":"est rerum tempore vitae sequi sint nihil reprehenderit dolor beatae ea dolores neque fugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis qui aperiam non debitis possimus qui neque nisi nulla"
+# }
+
+
+
+#"qui est esse"
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+#CHECK THE COMMENTS FUNCTIONS

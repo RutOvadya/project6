@@ -27,8 +27,10 @@ app.use(bodyParser.json());
 
 const userRoutes = require('./routes/users');
 const postRoutes = require('./routes/posts');
+const postRoutes = require('./routes/comments');
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
+app.use('/comments', postRoutes);
 
 
 // Start the server
