@@ -23,17 +23,17 @@ var con = mysql.createConnection({
   port: 3306
 });
 
-// con.connect(function(err) {
-//   if (err) throw err; 
-//   console.log("Connected!");
-// });
+con.connect(function(err) {
+  if (err) throw err; 
+  console.log("Connected!");
+});
 
-// con.connect(function(err) {
-//     if (err) throw err;
-//     console.log("Connected!");
-//     con.query("CREATE DATABASE project6", function (err, result) {
-//       if (err) throw err;
-//       console.log("Database created");
-//     });
-//   });
+con.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+    con.query("CREATE DATABASE project6", function (err, result) {
+      if (err) throw err;
+      console.log("Database created");
+    });
+  });
 
