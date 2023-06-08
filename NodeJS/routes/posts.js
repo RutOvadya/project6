@@ -11,8 +11,8 @@ const db = mysql.createConnection({
 });
 
 // Get all posts
-router.get('/', (req,res) => {
-    const userId = req.params.userId;
+router.get('/:id', (req,res) => {
+    const userId = req.params.id;
   db.query('SELECT * FROM posts WHERE userId = ?', [userId], (err, results) => {
     if (err) {
       console.error('Error getting posts: ', err);
@@ -24,10 +24,10 @@ router.get('/', (req,res) => {
 });
 
 // Get a specific post by ID
-router.get('/:id', (req, res) => {
-  const postId = req.params.id;
-  const userId = req.params.userId;
-  db.query('SELECT * FROM posts WHERE WHERE id = ? AND userID = ?', [postId ,userId], (err, results) => {
+router.get('/:id/:postId', (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.params.id;
+  db.query('SELECT * FROM posts WHERE id = ? AND userID = ?', [postId ,userId], (err, results) => {
     if (err) {
       console.error('Error retrieving post: ', err);
       res.status(500).json({ error: 'Error retrieving post' });
