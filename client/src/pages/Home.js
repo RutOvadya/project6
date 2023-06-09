@@ -7,6 +7,7 @@ import ViewAlbumsUser from "./ViewAlbumsUser";
 import "./Home.css";
 
 export default function Home(){
+  const API_URL = 'http://localhost:3000';
   const [contentValue, setContentValue] = useState("");
 
   const getCurrentName = () => {
@@ -30,7 +31,7 @@ export default function Home(){
   const getAlbumsById = async (id) => {
     try {
       const response = await fetch(
-        `https://jsonplaceholder.typicode.com/albums?userId=${id}`
+        `${API_URL}/albums?userId=${id}`
       );
       if (response.ok) {
         const listAlbums = await response.json();
@@ -49,7 +50,7 @@ export default function Home(){
   const getPostsById = async (id) => {
     try {
       const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts?userId=${id}`
+        `${API_URL}/posts?userId=${id}`
       );
       if (response.ok) {
         const listPosts = await response.json();
@@ -68,7 +69,7 @@ export default function Home(){
   const getTodosById = async (id) => {
     try {
       const response = await fetch(
-        `https://jsonplaceholder.typicode.com/todos?userId=${id}`
+        `${API_URL}/todos?userId=${id}`
       );
       if (response.ok) {
         const listTodos = await response.json();
@@ -132,7 +133,7 @@ export default function Home(){
        <button className="fas">Show My Albums &#xf03e;</button>
      </Link>
      <div id="locationForContent">{contentValue}</div>
-     <footer className="footer">COPYRIGHT © 2023 BY AVITAL & RUT</footer>
+     <footer className="footer">COPYRIGHT © 2023 BY NOA & RUT</footer>
    </div>
  );
 }; 

@@ -4,12 +4,13 @@ import ViewPhotos from "./ViewPhotos";
 import './Photos.css';
 
 export default function ViewAlbumsUser({ listAlbums, username }) {
+  const API_URL = 'http://localhost:3000';
   const [showPhotos, setShowPhotos] = useState("");
 
   const getFirstPhotoById = async (id) => {
     try {
       const response = await fetch(
-        `https://jsonplaceholder.typicode.com/photos?albumId=${id}&id=${50*(id-1)+1}&id=${50*(id-1)+2}`
+        `${API_URL}/photos?albumId=${id}&id=${50*(id-1)+1}&id=${50*(id-1)+2}`
           );
       if (response.ok) {
         const firstPhoto = await response.json();

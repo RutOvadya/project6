@@ -3,14 +3,14 @@ import { FaArrowAltCircleRight, FaArrowAltCircleLeft } from 'react-icons/fa';
 import './Photos.css';
 
 export default function ViewPhotos({ idAlbum, listURL }) {
-
+    const API_URL = 'http://localhost:3000';
     const [current, setCurrent] = useState(0);
     const length = listURL.length;
 
     const getPhotosById = async (id, photoId) => {
         try {
           const response = await fetch(
-            `https://jsonplaceholder.typicode.com/photos?albumId=${id}&id=${50*(id-1)+photoId+1}`
+            `${API_URL}/photos?albumId=${id}&id=${50*(id-1)+photoId+1}`
               );
           if (response.ok) {
             const photo = await response.json();

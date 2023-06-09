@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import './ViewPostsUser.css';
 
 const ViewPostsUser = ({ listPosts, username }) => {
+  const API_URL = 'http://localhost:3000';
   const [selectedPost, setSelectedPost] = useState(null);
   const [comments, setComments] = useState([]);
  
   const getCurrentComments = async (id) => {
     try {
-      const response = await fetch(`https://jsonplaceholder.typicode.com/comments?postId=${id}`);
+      const response = await fetch(`${API_URL}/comments?postId=${id}`);
       if (!response.ok) {
         throw new Error("Request failed!");
       }

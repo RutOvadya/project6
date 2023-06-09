@@ -8,7 +8,7 @@ const Layout = () => {
         <main>
             <Outlet />
         </main>
-        <footer class="footer">COPYRIGHT © 2023 BY AVITAL & RUT</footer>
+        <footer class="footer">COPYRIGHT © 2023 BY NOA & RUT</footer>
         </div>
   )
 };

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import './Login.css';
 
 export default function Login() {
+    const API_URL = 'http://localhost:3000';
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -48,7 +49,7 @@ export default function Login() {
                 placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
             </form>               
             <button id="login" onClick={loginFunction}>Login</button>
-            <footer className="footer">COPYRIGHT © 2023 BY AVITAL & RUT</footer>
+            <footer className="footer">COPYRIGHT © 2023 BY NOA & RUT</footer>
         </div>
     );
     
