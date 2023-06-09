@@ -1,25 +1,29 @@
 import logo from './logo.svg';
 import './App.css';
+import React, { Component, useState, useEffect, useRef  } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Layout from "./pages/Layout";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import NoPage from "./pages/NoPage";
+import ViewAlbumsUser from './pages/ViewAlbumsUser';
+import ViewInfoUser from './pages/ViewInfoUser';
+import ViewPostsUser from './pages/ViewPostsUser';
+import ViewTodosUser from './pages/ViewTodosUser';
 
-function App() {
+export default function App() {
+  const isLoggedIn = localStorage.getItem("currentUser") != null;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={isLoggedIn ? <Home /> : <Navigate to="/login" />}>
+          <Route path="*" element={<NoPage />} />
+        </Route>
+        <Route path="/login" element={!isLoggedIn ? <Login /> : <Navigate to="/" />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
-export default App;
+
