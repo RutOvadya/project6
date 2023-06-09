@@ -62,3 +62,81 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 #CHECK THE COMMENTS FUNCTIONS
+# GET http://localhost:3000/comments/2
+# Content-Type: application/json
+
+# GET http://localhost:3000/comments/1/1
+# Content-Type: application/json
+
+# POST http://localhost:3000/comments/1
+# Content-Type: application/json
+
+# {
+#     "name": "Rut",
+#   "email": "@@@@",
+#   "body": "Hi, How are you?"
+# }
+
+#  DELETE http://localhost:3000/comments/2/502
+
+# PUT http://localhost:3000/comments/1/1
+# Content-Type: application/json
+
+# {
+#     "name":  "id labore ex et quam laborum",
+#    "email": "Eliseo@gardner.biz",
+#    "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos tempora quo necessitatibus dolor quam autem quasi reiciendis et nam sapiente accusantium"
+# }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+#CHECK THE TODOS FUNCTIONS
+
+# GET http://localhost:3000/todos/3
+# Content-Type: application/json
+
+# GET http://localhost:3000/todos/2/25
+# Content-Type: application/json
+
+# POST http://localhost:3000/todos/2
+# Content-Type: application/json
+
+# {
+#     "title": "HELLOO", 
+#     "completed": 1
+# }
+
+#   DELETE http://localhost:3000/todos/2/201
+
+# PUT http://localhost:3000/todos/10/200
+# Content-Type: application/json
+
+# {
+#    "title": "ipsam aperiam voluptates qui", 
+#    "completed": 0
+# }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+#CHECK THE USERSR FUNCTIONS
+# GET http://localhost:3000/usersR
+# Content-Type: application/json
+
+# GET http://localhost:3000/usersR/Glenna Reichert/123
+# Content-Type: application/json
+
+# POST http://localhost:3000/usersR
+# Content-Type: application/json
+
+# {
+#     "username": "HELLOO", 
+#     "password": 1
+# }
+
+#   DELETE http://localhost:3000/usersR/RUT/321
+
+# PUT http://localhost:3000/usersR/HELLOO/1
+# Content-Type: application/json
+
+# {
+#     "username": "RUT", 
+#     "password": "321"
+# }

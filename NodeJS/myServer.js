@@ -27,10 +27,14 @@ app.use(bodyParser.json());
 
 const userRoutes = require('./routes/users');
 const postRoutes = require('./routes/posts');
-const postRoutes = require('./routes/comments');
+const commentRoutes = require('./routes/comments');
+const todoRoutes = require('./routes/todos');
+const usersRRoutes = require('./routes/usersR');
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
-app.use('/comments', postRoutes);
+app.use('/comments', commentRoutes);
+app.use('/todos', todoRoutes);
+app.use('/usersR', usersRRoutes);
 
 
 // Start the server
