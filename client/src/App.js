@@ -4,6 +4,7 @@ import React, { Component, useState, useEffect, useRef  } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Home from "./pages/Home";
 import NoPage from "./pages/NoPage";
 import ViewAlbumsUser from './pages/ViewAlbumsUser';
@@ -20,7 +21,9 @@ export default function App() {
         <Route path="/" element={isLoggedIn ? <Home /> : <Navigate to="/login" />}>
           <Route path="*" element={<NoPage />} />
         </Route>
-        <Route path="/login" element={!isLoggedIn ? <Login /> : <Navigate to="/" />} />
+        <Route path="/login" element={!isLoggedIn ? <Login /> : <Navigate to="/" />} />        
+        <Route path="/register" element={!isLoggedIn ? <Register /> : <Navigate to="/" />} />        
+
       </Routes>
     </BrowserRouter>
   );

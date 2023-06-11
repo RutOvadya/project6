@@ -5,6 +5,7 @@ import ViewTodosUser from "./ViewTodosUser";
 import ViewPostsUser from "./ViewPostsUser";
 import ViewAlbumsUser from "./ViewAlbumsUser";
 import "./Home.css";
+import '@fortawesome/fontawesome-free/css/all.css';
 
 export default function Home(){
   const API_URL = 'http://localhost:3000';
@@ -19,7 +20,6 @@ export default function Home(){
     localStorage.removeItem("currentUser");
     localStorage.removeItem("currentUserTodos");
     window.location.href = "/";
-    
   };
 
   const getCurrentUser = () => {
@@ -50,7 +50,8 @@ export default function Home(){
   const getPostsById = async (id) => {
     try {
       const response = await fetch(
-        `${API_URL}/posts?userId=${id}`
+        `${API_URL}/posts/${id}`,
+         { method: 'GET'}
       );
       if (response.ok) {
         const listPosts = await response.json();
@@ -69,7 +70,8 @@ export default function Home(){
   const getTodosById = async (id) => {
     try {
       const response = await fetch(
-        `${API_URL}/todos?userId=${id}`
+        `${API_URL}/todos/${id}`,
+        { method: 'GET'}
       );
       if (response.ok) {
         const listTodos = await response.json();
@@ -97,14 +99,8 @@ export default function Home(){
   };
 
   const showTodos = async () => {
-    var listTodos=[];
-    if(localStorage.getItem("currentUserTodos") === null){
-      const object = getCurrentUser();
-      listTodos = await getTodosById(object.id);
-      window.localStorage.setItem("currentUserTodos", JSON.stringify(listTodos));
-    } else{
-      listTodos = JSON.parse(localStorage.getItem("currentUserTodos"));
-    }  
+    const object = getCurrentUser();
+    const listTodos = await getTodosById(object.id);
     setContentValue(<ViewTodosUser listTodos={listTodos}/>);
   };
 

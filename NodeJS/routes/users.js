@@ -22,17 +22,35 @@ router.get('/', (req,res) => {
   });
 });
 
-// Get a specific user by ID
-router.get('/:id', (req, res) => {
-  const userId = req.params.id;
-  db.query('SELECT * FROM users WHERE id = ?', [userId], (err, results) => {
+// // Get a specific user by ID
+// router.get('/:id', (req, res) => {
+//   const userId = req.params.id;
+//   db.query('SELECT * FROM users WHERE id = ?', [userId], (err, results) => {
+//     if (err) {
+//       console.error('Error retrieving user: ', err);
+//       res.status(500).json({ error: 'Error retrieving user' });
+//       return;
+//     }
+//     if (results.length === 0) {
+//       res.status(404).json({ error: 'User not found' });
+//       return;
+//     }
+//     const user = results[0];
+//     res.json({ user });
+//   });
+// });
+
+// Get a specific user by username
+router.get('/:username', (req, res) => {
+  const username = req.params.username;
+  db.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
     if (err) {
       console.error('Error retrieving user: ', err);
       res.status(500).json({ error: 'Error retrieving user' });
       return;
     }
     if (results.length === 0) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ error: 'User not found???' });
       return;
     }
     const user = results[0];

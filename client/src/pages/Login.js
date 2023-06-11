@@ -1,41 +1,61 @@
 import React, { useState } from "react";
 import './Login.css';
+import register from "./Register";
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 export default function Login() {
     const API_URL = 'http://localhost:3000';
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const loginFunction = () => {
-        fetch(`https://jsonplaceholder.typicode.com/users?username=${username}`)
-      .then(response => {if(response.ok) {
-                            return response.json();    
-                        } else{
-                           throw "Request failed!";    
-                    }
-        })
-      .then(checkUser=> {if(checkUser.length==0){
-                        throw "The name is not valid";
-                    } else{
-                        return checkUser[0];
-                    }
-        })
-      .then(myUser=>{ 
-        if(password==myUser.address.geo.lat.slice(-4))
-        {
-            return JSON.stringify(myUser);
-        } else{
-            throw "The password is not valid";
-        }
-    })
-      .then(userJSON => { 
-        window.localStorage.setItem("currentUser", userJSON);
-        //debugger;
-        window.location.href = "/"; // Redirect to the home page
-     }) 
-      .catch(error=>alert(""+error));
-
-    }
+    const loginFunction = async() => {
+        try {
+            const response = await fetch(
+              `${API_URL}/usersR/${username}/${password}`,
+              { method: 'GET'}
+            );
+            console.log(response);
+            if (response.ok) {
+              const userAndPassword = await response.json();
+              if (userAndPassword === null) {
+                throw new Error("The user is not exist");
+              }
+              return userAndPassword;
+            } else {
+              throw new Error("Request failed!");
+            }
+          } catch (error) {
+            alert("" + error);
+          }
+    };
+    
+    const loginAndSaveToLS = async() => {
+        const userAndPassword = await loginFunction();
+        const username= userAndPassword.username_password.name;
+        try {
+            const response = await fetch(
+              `${API_URL}/users/${username}`,
+              { method: 'GET'}
+            );
+            console.log(response);
+            if (response.ok) {
+              const currentUser = await response.json();
+              if (currentUser === null) {
+                throw new Error("The user is not exist");
+              }
+              window.localStorage.setItem("currentUser", JSON.stringify(currentUser.user));
+              window.location.href = "/"; // Redirect to the home page
+            } else {
+              throw new Error("Request failed!");
+            }
+          } catch (error) {
+            alert("" + error);
+          }
+    };
 
     return(
         <div id="loginContainer">
@@ -48,7 +68,10 @@ export default function Login() {
                 <input className="box" type="text" id="password" name="password" required
                 placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
             </form>               
-            <button id="login" onClick={loginFunction}>Login</button>
+            <button id="login" onClick={loginAndSaveToLS}>Login</button>
+            <p>
+                <span>New User? Click here to  <Link to="/register">Register</Link></span>
+            </p>     
             <footer className="footer">COPYRIGHT © 2023 BY NOA & RUT</footer>
         </div>
     );

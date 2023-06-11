@@ -7,17 +7,23 @@ const ViewPostsUser = ({ listPosts, username }) => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [comments, setComments] = useState([]);
  
+
+
   const getCurrentComments = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/comments?postId=${id}`);
-      if (!response.ok) {
+      const response = await fetch(
+        `${API_URL}/comments/${id}`,
+         { method: 'GET'}
+      );
+      if (response.ok) {
+        const listComments = await response.json();
+        if (listComments.length === 0) {
+          throw new Error("You have no comments");
+        }
+        setComments(listComments);
+      } else {
         throw new Error("Request failed!");
       }
-      const listComments = await response.json();
-      if (listComments.length === 0) {
-        throw new Error("You have no comments");
-      }
-      setComments(listComments);
     } catch (error) {
       alert("" + error);
     }
@@ -64,13 +70,13 @@ const ViewPostsUser = ({ listPosts, username }) => {
           {selectedPost === post.id && comments.length > 0 && (
             <div id="forComments">
               {comments.map((comment) => (
-                <p key={comment.id} className="far">
-                  &emsp;&emsp;&#xf075; {comment.name} <br /> &emsp;&emsp;{comment.body}
+                <p key={comment.id} >
+                  &emsp;&emsp; {comment.name} <br /> &emsp;&emsp;{comment.body}
                 </p>
               ))}
                 <p>
-                  <button id="btnComments" className="fas" onClick={() => HideComments()}>
-                    Hide the comments &#xf086;
+                  <button id="btnComments" className="fas fa-comment" onClick={() => HideComments()}>
+                    Hide the comments 
                   </button>
                 </p>
             </div>
