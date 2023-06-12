@@ -5,8 +5,8 @@
 # GET http://localhost:3000/users/1
 # Content-Type: application/json
 
-GET http://localhost:3000/users/Bret
-Content-Type: application/json
+# GET http://localhost:3000/users/Bret
+# Content-Type: application/json
 
 # POST http://localhost:3000/users
 # Content-Type: application/json
@@ -126,13 +126,13 @@ Content-Type: application/json
 # GET http://localhost:3000/usersR/Glenna Reichert/123
 # Content-Type: application/json
 
-# POST http://localhost:3000/usersR
-# Content-Type: application/json
+POST http://localhost:3000/usersR
+Content-Type: application/json
 
-# {
-#     "username": "HELLOO", 
-#     "password": 1
-# }
+{
+    "username": "Bret", 
+    "password": 123
+}
 
 #   DELETE http://localhost:3000/usersR/RUT/321
 

@@ -50,6 +50,7 @@ export default function Login() {
               window.localStorage.setItem("currentUser", JSON.stringify(currentUser.user));
               window.location.href = "/"; // Redirect to the home page
             } else {
+                console.log(`${API_URL}/users/${username}`,response);
               throw new Error("Request failed!");
             }
           } catch (error) {
