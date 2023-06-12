@@ -2,7 +2,7 @@ import React, { useState, useEffect  } from "react";
 import { Link } from "react-router-dom";
 import './ViewPostsUser.css';
 
-const ViewPostsUser = ({ listPosts, username }) => {
+const ViewPostsUser = ({ listPosts, username, userID }) => {
   const API_URL = 'http://localhost:3000';
   const [selectedPost, setSelectedPost] = useState(null);
   const [comments, setComments] = useState([]);

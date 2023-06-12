@@ -1,0 +1,18 @@
+.forActions{
+    color: blue;
+    background-color: rgba(0,0,0,0);
+    
+}
+.forActions:hover {
+    background-color: rgba(0,0,0,0);
+  }
+
+ .forActions :active,
+.forActions:focus {
+  outline: none;
+  background-color: rgba(0,0,0,0);
+}
+
+.forActions:focus:not(:active) {
+    box-shadow:  #FFFFFF 0 0 0 0;
+  }

@@ -1,7 +1,14 @@
 import React, { useState } from "react";
+import './ViewTodosUser.css';
 
-const ViewTodosUser = ({ listTodos }) => {
+
+const ViewTodosUser = ({ listTodos, userID }) => {
   const [sortedTodos, setSortedTodos] = useState([...listTodos]);
+  //const [todos, setTodos] = useState([]);
+
+
+  const API_URL = 'http://localhost:3000';
+
 
   const changeFunc = () => {
     const selectBox = document.getElementById("selectBox");
@@ -34,13 +41,61 @@ const ViewTodosUser = ({ listTodos }) => {
     setSortedTodos(sortedList);
   };
 
-  const handleChange = (id) => {
-    const todos= JSON.parse(localStorage.getItem("currentUserTodos"));
-    var spesificTodo=todos[id-1];
-    spesificTodo.completed=!spesificTodo.completed;
-    var updateTodo= todos;
-    updateTodo[id-1]=spesificTodo;
-    localStorage.setItem("currentUserTodos",JSON.stringify(updateTodo));
+  const handleChange = async(id, title, completed, isChecked) => {
+    const updateTodo = {
+      title: title,
+      completed: !completed
+    };
+     
+    await fetch(
+            `${API_URL}/todos/${userID}/${id}`, 
+            {method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(updateTodo) })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message); // 'Todo updated successfully'd
+      })
+      .catch(error => {
+        alert('Error updating todo:', error);
+      });
+  };
+
+  const getCurrentTodos = async()=>{
+    try {
+      const response = await fetch(
+        `${API_URL}/todos/${userID}`,
+        { method: 'GET'}
+      );
+      if (response.ok) {
+        const listTodos = await response.json();
+        if (listTodos.length === 0) {
+          throw new Error("You have no Todos");
+        }
+        setSortedTodos(listTodos);
+        return listTodos;
+      } else {
+        throw new Error("Request failed!");
+      }
+    } catch (error) {
+      alert("" + error);
+    }
+  };
+
+  const deleteTODO= async(id)=>{
+    await fetch(
+      `${API_URL}/todos/${userID}/${id}`, 
+      {method: 'DELETE',
+      headers: {'Content-Type': 'application/json'} })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message); // 'Todo deleted successfully'd
+    })
+    .catch(error => {
+      alert('Error updating todo:', error);
+    });
+
+    getCurrentTodos(); //to get the update list of todos
   };
 
   return (
@@ -58,8 +113,11 @@ const ViewTodosUser = ({ listTodos }) => {
               <input id="checkBox" 
               type="checkbox" 
               defaultChecked={todo.completed}
-              onChange={() => handleChange(todo.id)} />
-              {todo.title}
+              onChange={(event) => handleChange(todo.id, todo.title, todo.completed, event.target.checked)}/>
+              {todo.title} 
+              <br></br>
+              &emsp; <button className="forActions">edit the text</button>
+              <button className="forActions" onClick={() => deleteTODO(todo.id)}>delete todo</button>
             </p>
           </div>
         ))}
