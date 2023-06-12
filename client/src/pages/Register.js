@@ -19,51 +19,67 @@ export default function Register() {
     const [phone, setPhone] = useState("");
 
     const doingRegister= async (user) =>{
-        try {
-            console.log(user);
-             await fetch(`${API_URL}/usersR`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body:JSON.stringify({
-                    username: user.username, 
-                    password: user.password
-                  })
-              }) .then(response => response.json())
-              .then(data => {
-                alert(data);// Response from the server
-              })
-            }
-             catch (error) {
-                alert("" + error);
-              };
+      await fetch(
+        `${API_URL}/usersR`,
+        {method: 'POST',
+         headers: {'Content-Type': 'application/json'},
+         body:JSON.stringify({
+          username: user.username, 
+          password: user.password
+        }) })  
+         .then(response => response.json())
+         .then(data => {
+           alert(data.message); // User created successfully
+         })
+         .catch(error => {
+           alert('Error create todo:', error);
+         });
+
+        // try {
+        //     console.log(user);
+        //      await fetch(`${API_URL}/usersR`, {
+        //         method: 'POST',
+        //         headers: {
+        //           'Content-Type': 'application/json'
+        //         },
+        //         body:JSON.stringify({
+        //             username: user.username, 
+        //             password: user.password
+        //           })
+        //       }) .then(response => response.json())
+        //       .then(data => {
+        //         alert(data);// Response from the server
+        //       })
+        //     }
+        //      catch (error) {
+        //         alert("" + error);
+        //       };
             };
 
-     const getAllUsers= async () =>{
-        try {
-            const response = await fetch(
-              `${API_URL}/users`,
-               { method: 'GET'}
-            );
-            if (response.ok) {
-              const listUsers = await response.json();
-              if (listUsers.length === 0) {
-                throw new Error("You have no Users");
-              }
-              console.log(listUsers);
-              return listUsers;
-            } else {
-              throw new Error("Request of users failed!");
-            }
-          } catch (error) {
-            alert("" + error);
-          }
-     };
+    //  const getAllUsers= async () =>{
+    //     try {
+    //         const response = await fetch(
+    //           `${API_URL}/users`,
+    //            { method: 'GET'}
+    //         );
+    //         if (response.ok) {
+    //           const listUsers = await response.json();
+    //           if (listUsers.length === 0) {
+    //             throw new Error("You have no Users");
+    //           }
+    //           console.log(listUsers);
+    //           return listUsers;
+    //         } else {
+    //           throw new Error("Request of users failed!");
+    //         }
+    //       } catch (error) {
+    //         alert("" + error);
+    //       }
+    //  };
 
     const handleRegistrationComplete = async(e) => {
         e.preventDefault();
-        const user = {
+        const newUser = {
             name: name,
             username: username,
             email: email,
@@ -72,18 +88,34 @@ export default function Register() {
             password: password
           };
 
-        var listUsers= await getAllUsers();
-        console.log(listUsers);
-        for (var i = 0; i < listUsers.length; i++) {
-        if(listUsers[i].name==user.name & listUsers[i].username==user.username &
-            listUsers[i].email==user.email & listUsers[i].address==user.address &
-            listUsers[i].phone==user.phone)
-            console.log("yes");
-            doingRegister(user); 
-            break;
-        }
-        if (i==listUsers.length) 
-            alert("This user not exist in the database");
+
+          await fetch(
+            `${API_URL}/users`,
+            {method: 'POST',
+             headers: {'Content-Type': 'application/json'},
+             body: JSON.stringify(newUser) })  
+             .then(response => response.json())
+             .then(data => {
+               alert(data.message); // User created successfully
+             })
+             .catch(error => {
+               alert('Error create todo:', error);
+             });
+    
+         doingRegister(newUser); 
+
+        // var listUsers= await getAllUsers();
+        // console.log(listUsers);
+        // for (var i = 0; i < listUsers.length; i++) {
+        // if(listUsers[i].name==user.name & listUsers[i].username==user.username &
+        //     listUsers[i].email==user.email & listUsers[i].address==user.address &
+        //     listUsers[i].phone==user.phone)
+        //     console.log("yes");
+        //     doingRegister(user); 
+        //     break;
+        // }
+        // if (i==listUsers.length) 
+        //     alert("This user not exist in the database");
 
           
        // doingRegister(user);
@@ -106,7 +138,6 @@ export default function Register() {
 
     return(
         <div id="loginContainer">
-            {/* <h1 id="welcome">Register</h1> */}
             <form>
                 <label className="label" htmlFor="name">enter your name: </label>
                 <input className="box" type="text" id="name" name="name" required

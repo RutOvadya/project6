@@ -4,6 +4,8 @@ import './ViewPostsUser.css';
 
 const ViewPostsUser = ({ listPosts, username, userID }) => {
   const API_URL = 'http://localhost:3000';
+  const [listsOfPosts, setListsOfPosts] = useState([...(listPosts || [])]);
+
   const [selectedPost, setSelectedPost] = useState(null);
   const [comments, setComments] = useState([]);
  
@@ -43,6 +45,7 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
 
   const togglePost = (id) => {
     setSelectedPost(prevSelectedPost => prevSelectedPost === id ? null : id);
+    setShowNewPostForm(false);
   };
 
   useEffect(() => {
@@ -50,43 +53,83 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
   }, [selectedPost]);
 
 
+  const getCurrentPosts = async()=>{
+    try {
+      const response = await fetch(
+        `${API_URL}/posts/${userID}`,
+        { method: 'GET'}
+      );
+      if (response.ok) {
+        const listPosts = await response.json();
+        if (listPosts.length === 0) {
+          throw new Error("You have no Posts");
+        }
+        setListsOfPosts(listPosts);
+        return listPosts;
+      } else {
+        throw new Error("Request failed!");
+      }
+    } catch (error) {
+      alert("" + error);
+    }
+  };
  
-
   const handleCreatePost= async()=>{
     const newPost = {
-      userId: {userID},
+      userId: userID,
       title: newPostTitle,
       body: newPostBody
     };
      
-    try {
-      const response = await fetch(
+      await fetch(
         `${API_URL}/posts`,
         {method: 'POST',
          headers: {'Content-Type': 'application/json'},
-         body: JSON.stringify(newPost) });
-         if (response.ok) {
-          alert(response);
-        } else {
-          throw new Error("Request failed!");
-        }
-      } catch (error) {
-        alert("" + error);
-      }
+         body: JSON.stringify(newPost) })  
+         .then(response => response.json())
+         .then(data => {
+           alert(data.message); // Post created successfully
+         })
+         .catch(error => {
+           alert('Error create post:', error);
+         });
 
+        getCurrentPosts(); //to get the update list of posts
         setNewPostTitle('');
         setNewPostBody('');
  
      };
 
-
   return (
     <div>
-      {listPosts.map((post) => (
+       <div>
+      {showNewPostForm ? (
+        <div id="forNewPost">
+          <label htmlFor="postTitle">&emsp;Title:</label>
+          <textarea
+            type="text"
+            id="postTitle"
+            value={newPostTitle}
+            onChange={(e) => setNewPostTitle(e.target.value)}/>
+          <label htmlFor="postBody">Body:</label>
+          <textarea
+            id="postBody"
+            value={newPostBody}
+            onChange={(e) => setNewPostBody(e.target.value)}></textarea>
+          <button onClick={handleCreatePost}>Create Post</button>
+          <button onClick={() => setShowNewPostForm(false)}>Cancel</button>
+        </div>
+      ) : (
+        <button onClick={() =>{ setShowNewPostForm(true); setSelectedPost(null)}}>Click here to add new post</button>
+      )}
+    </div>
+    <div>
+    {listsOfPosts.length>0 ? (
+      listsOfPosts.map((post) => (
         <div key={post.id}>
           <Link to={`/users/${username}/Posts/${post.id}`} onClick={() => togglePost(post.id)}>
             <button id="title" className={selectedPost === post.id ? "highlighted" : ""}>
-              {post.id}. {post.title}
+              {post.title}
             </button>
           </Link>
           {selectedPost === post.id && (<>
@@ -113,28 +156,10 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
             </div>
           )}
         </div>
-      ))}
-      <div>
-      {showNewPostForm ? (
-        <div id="forNewPost">
-          <label htmlFor="postTitle">&emsp;Title:</label>
-          <textarea
-            type="text"
-            id="postTitle"
-            value={newPostTitle}
-            onChange={(e) => setNewPostTitle(e.target.value)}/>
-          <label htmlFor="postBody">Body:</label>
-          <textarea
-            id="postBody"
-            value={newPostBody}
-            onChange={(e) => setNewPostBody(e.target.value)}></textarea>
-          <button onClick={handleCreatePost}>Create Post</button>
-          <button onClick={() => setShowNewPostForm(false)}>Cancel</button>
-        </div>
-      ) : (
-        <button onClick={() => setShowNewPostForm(true)}>Click here to add new post</button>
-      )}
-    </div>
+      ))) : (
+      <p>&emsp; There are no posts</p>
+    )}
+      </div>
     </div>
   );
 };

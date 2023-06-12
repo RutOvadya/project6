@@ -3,9 +3,12 @@ import './ViewTodosUser.css';
 
 
 const ViewTodosUser = ({ listTodos, userID }) => {
-  const [sortedTodos, setSortedTodos] = useState([...listTodos]);
+  const [sortedTodos, setSortedTodos] = useState([...(listTodos || [])]);
   //const [todos, setTodos] = useState([]);
 
+  const [showNewTodoForm, setShowNewTodoForm] = useState(false);
+  const [newTodoTitle, setNewTodoTitle] = useState('');
+  const [newTodoCompleted, setNewTodoCompleted] = useState(true);
 
   const API_URL = 'http://localhost:3000';
 
@@ -98,8 +101,53 @@ const ViewTodosUser = ({ listTodos, userID }) => {
     getCurrentTodos(); //to get the update list of todos
   };
 
+  const handleCreateTodo= async()=>{
+    const newTodo = {
+      title: newTodoTitle, 
+      completed: newTodoCompleted
+    };
+      await fetch(
+        `${API_URL}/todos/${userID}`,
+        {method: 'POST',
+         headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify(newTodo) })  
+         .then(response => response.json())
+         .then(data => {
+           alert(data.message); // Todo created successfully
+         })
+         .catch(error => {
+           alert('Error create todo:', error);
+         });
+
+        getCurrentTodos(); //to get the update list of todo
+        setNewTodoTitle('');
+     };
+
   return (
-    <div>&emsp;
+    <div>
+         <div>
+      {showNewTodoForm ? (
+        <div id="forNewTodo">
+          <label htmlFor="todoTitle">&emsp;Title:</label>
+          <textarea
+            type="text"
+            id="todoTitle"
+            value={newTodoTitle}
+            onChange={(e) => setNewTodoTitle(e.target.value)}/>
+          <label htmlFor="postBody">copleted?</label>
+          <input
+          type="checkbox"
+            id="todoCompleted"
+            checked={newTodoCompleted}
+            onChange={(e) => setNewTodoCompleted(e.target.checked)}></input>
+          <button onClick={handleCreateTodo}>Create Todo</button>
+          <button onClick={() => setShowNewTodoForm(false)}>Cancel</button>
+        </div>
+      ) : (
+        <button onClick={() => setShowNewTodoForm(true)}>Click here to add new todo</button>
+      )}
+    </div>
+      &emsp;
       <select id="selectBox" name="orderby" className="orderby" onChange={changeFunc} autoFocus>
         <option value="serial">Sort by Serial</option>
         <option value="performance">Sort by Performance</option>
@@ -107,7 +155,8 @@ const ViewTodosUser = ({ listTodos, userID }) => {
         <option value="random">Sort Randomly</option>
       </select>
       <div>
-        {sortedTodos.map((todo) => (
+    { sortedTodos.length>0 ? (
+      sortedTodos.map((todo) => (
           <div key={todo.id}>
             <p>&emsp;
               <input id="checkBox" 
@@ -120,7 +169,9 @@ const ViewTodosUser = ({ listTodos, userID }) => {
               <button className="forActions" onClick={() => deleteTODO(todo.id)}>delete todo</button>
             </p>
           </div>
-        ))}
+        ))) : (
+          <p> &emsp; There are no Todos</p>
+        )}
       </div>
     </div>
   );

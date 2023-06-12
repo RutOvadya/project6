@@ -32,3 +32,15 @@
     display:block;
     float:inherit;
 }
+#forNewPost{
+    position:absolute;
+    text-align: left;
+    align-items:right;
+    right: 2em;
+    display: flex;
+    top:15em;
+    margin-top: 1em;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    border-radius: 1.5em;
+}
