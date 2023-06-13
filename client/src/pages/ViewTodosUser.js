@@ -9,6 +9,8 @@ const ViewTodosUser = ({ listTodos, userID }) => {
   const [showNewTodoForm, setShowNewTodoForm] = useState(false);
   const [newTodoTitle, setNewTodoTitle] = useState('');
   const [newTodoCompleted, setNewTodoCompleted] = useState(true);
+  const [editableTodoId, setEditableTodoId] = useState(null);
+  const [editableTodoText, setEditableTodoText] = useState("");
 
   const API_URL = 'http://localhost:3000';
 
@@ -101,6 +103,39 @@ const ViewTodosUser = ({ listTodos, userID }) => {
     getCurrentTodos(); //to get the update list of todos
   };
 
+  const editTODO = (id) => {
+  const todo = sortedTodos.find(todo => todo.id === id);
+  if (todo) {
+    setEditableTodoId(id);
+    setEditableTodoText(todo.title);
+  }
+};
+
+const saveEditedTodo = async (id) => {
+  const updatedTodo = {
+    title: editableTodoText
+  };
+
+  await fetch(
+    `${API_URL}/todos/${userID}/${id}`, 
+    {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(updatedTodo)
+    }
+  )
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message); // 'Todo updated successfully'
+    setEditableTodoId(null);
+    setEditableTodoText("");
+    getCurrentTodos(); // to get the updated list of todos
+  })
+  .catch(error => {
+    alert('Error updating todo:', error);
+  });
+};
+
   const handleCreateTodo= async()=>{
     const newTodo = {
       title: newTodoTitle, 
@@ -163,11 +198,24 @@ const ViewTodosUser = ({ listTodos, userID }) => {
               type="checkbox" 
               defaultChecked={todo.completed}
               onChange={(event) => handleChange(todo.id, todo.title, todo.completed, event.target.checked)}/>
-              {todo.title} 
-              <br></br>
-              &emsp; <button className="forActions">edit the text</button>
-              <button className="forActions" onClick={() => deleteTODO(todo.id)}>delete todo</button>
-            </p>
+       {todo.id === editableTodoId ? (
+        <input
+          type="text"
+          value={editableTodoText}
+          onChange={(event) => setEditableTodoText(event.target.value)}
+        />
+      ) : (
+        <span>{todo.title}</span>
+      )}
+      <br></br>
+      &emsp; 
+      {todo.id === editableTodoId ? (
+        <button className="forActions" onClick={() => saveEditedTodo(todo.id)}>Save</button>
+      ) : (
+        <button className="forActions" onClick={() => editTODO(todo.id)}>Edit</button>
+      )}
+      <button className="forActions" onClick={() => deleteTODO(todo.id)}>Delete</button>
+    </p>
           </div>
         ))) : (
           <p> &emsp; There are no Todos</p>

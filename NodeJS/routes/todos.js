@@ -73,7 +73,7 @@ router.put('/:userId/:id', (req, res) => {
   });
 });
 
-// Delete a comment
+// Delete a todo
 router.delete('/:userId/:id', (req, res) => {
     const userId = req.params.userId;
     const todoId = req.params.id;
