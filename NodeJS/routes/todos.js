@@ -25,7 +25,7 @@ router.get('/:userId', (req,res) => {
 
 // Get a specific todo of userId
 router.get('/:userId/:id', (req, res) => {
-    const userId = req.params.userId;
+  const userId = req.params.userId;
   const todoId = req.params.id;
   db.query('SELECT * FROM todos WHERE id = ? AND userId = ?', [todoId ,userId], (err, results) => {
     if (err) {
