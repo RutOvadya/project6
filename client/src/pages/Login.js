@@ -35,6 +35,9 @@ export default function Login() {
     
     const loginAndSaveToLS = async() => {
         const userAndPassword = await loginFunction();
+        //  if(typeof(userAndPassword)!==Object){
+        //   alert("userAndPassword not exist");
+        //  }
         const username= userAndPassword.username_password.name;
         try {
             const response = await fetch(

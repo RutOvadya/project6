@@ -31,7 +31,8 @@ export default function Home(){
   const getAlbumsById = async (id) => {
     try {
       const response = await fetch(
-        `${API_URL}/albums?userId=${id}`
+        `${API_URL}/albums/${id}`,
+        { method: 'GET'}
       );
       if (response.ok) {
         const listAlbums = await response.json();
@@ -107,7 +108,7 @@ export default function Home(){
   const showAlbums = async () => {
     const object = getCurrentUser();
     const listAlbums = await getAlbumsById(object.id);
-    setContentValue(<ViewAlbumsUser listAlbums={listAlbums} username={object.username} />);
+    setContentValue(<ViewAlbumsUser listAlbums={listAlbums} username={object.username} userID={object.id}/>);
   };
 
   return (

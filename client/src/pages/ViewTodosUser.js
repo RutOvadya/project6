@@ -97,7 +97,7 @@ const ViewTodosUser = ({ listTodos, userID }) => {
       alert(data.message); // 'Todo deleted successfully'd
     })
     .catch(error => {
-      alert('Error updating todo:', error);
+      alert('Error deleting todo:', error);
     });
 
     getCurrentTodos(); //to get the update list of todos

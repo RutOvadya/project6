@@ -146,5 +146,26 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 #CHECK THE albums FUNCTIONS
-GET http://localhost:3000/albums/1
-Content-Type: application/json
+# GET http://localhost:3000/albums/1
+# Content-Type: application/json
+
+# GET http://localhost:3000/albums/1/3
+# Content-Type: application/json
+
+# POST http://localhost:3000/albums/10
+# Content-Type: application/json
+
+# {
+#     "title": "new album"
+# }
+
+#   DELETE http://localhost:3000/albums/10/101
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+#CHECK THE photos FUNCTIONS
+# GET http://localhost:3000/photos/1
+# Content-Type: application/json
+
+# GET http://localhost:3000/photos/1/50
+# Content-Type: application/json

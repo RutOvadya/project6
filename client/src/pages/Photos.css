@@ -2,7 +2,7 @@
     position:absolute;
     text-align: left;
     align-items:right;
-    right: 20em;
+    right: 20%;
     display: flex;
     top:12em;
     margin-top: 1em;
@@ -53,4 +53,11 @@
  #album{
     color: blue;
     background-color: rgba(0,0,0,0);
+ }
+ #deleteButton{
+  position: absolute;
+  bottom: 100;
+  left: 50;
+  align-items: center;
+  text-align: center;
  }
