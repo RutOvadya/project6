@@ -1,222 +1,211 @@
-import React, { useState, useEffect  } from "react";
-import { Link } from "react-router-dom";
-import './ViewPostsUser.css';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-const ViewPostsUser = ({ listPosts, username, userID }) => {
-  const API_URL = 'http://localhost:3000';
-  const [listsOfPosts, setListsOfPosts] = useState([...(listPosts || [])]);
-
-  const [selectedPost, setSelectedPost] = useState(null);
+const ViewPostsUser = ({ userID }) => {
+  const [listsOfPosts, setListOfPosts] = useState([]);
   const [comments, setComments] = useState([]);
- 
-
-  const [showNewPostForm, setShowNewPostForm] = useState(false);
-  const [newPostTitle, setNewPostTitle] = useState('');
-  const [newPostBody, setNewPostBody] = useState('');
+  const [selectedPost, setSelectedPost] = useState(null);
   const [editablePostId, setEditablePostId] = useState(null);
-  const [editablePostText, setEditablePostText] = useState("");
-
-  const getCurrentComments = async (id) => {
-    try {
-      const response = await fetch(
-        `${API_URL}/comments/${id}`,
-         { method: 'GET'}
-      );
-      if (response.ok) {
-        const listComments = await response.json();
-        if (listComments.length === 0) {
-          throw new Error("You have no comments");
-        }
-        setComments(listComments);
-      } else {
-        throw new Error("Request failed!");
-      }
-    } catch (error) {
-      alert("" + error);
-    }
-  };
-
-  const showComments = async (id) => {
-    await getCurrentComments(id);
-  };
-  const HideComments=()=>{
-    setComments("");
-  };
-
-  const togglePost = (id) => {
-    setSelectedPost(prevSelectedPost => prevSelectedPost === id ? null : id);
-    setShowNewPostForm(false);
-  };
+  const [editablePostText, setEditablePostText] = useState('');
+  const [newComment, setNewComment] = useState('');
 
   useEffect(() => {
-    setComments([]);
-  }, [selectedPost]);
+    getCurrentPosts();
+  }, []);
 
+  const API_URL = 'your_api_url';
 
-  const getCurrentPosts = async()=>{
+  const getCurrentPosts = async () => {
     try {
-      const response = await fetch(
-        `${API_URL}/posts/${userID}`,
-        { method: 'GET'}
-      );
+      const response = await fetch(`${API_URL}/posts/${userID}`);
+      const data = await response.json();
+      setListOfPosts(data);
+    } catch (error) {
+      alert('Error retrieving posts:', error);
+    }
+  };
+
+  const getCurrentComments = async (postId) => {
+    try {
+      const response = await fetch(`${API_URL}/comments/${postId}`);
+      const data = await response.json();
+      setComments(data);
+    } catch (error) {
+      alert('Error retrieving comments:', error);
+    }
+  };
+
+  const togglePost = async (postId) => {
+    if (selectedPost === postId) {
+      setSelectedPost(null);
+      setComments([]);
+    } else {
+      try {
+        setSelectedPost(postId);
+        await getCurrentComments(postId);
+      } catch (error) {
+        alert('Error toggling post:', error);
+      }
+    }
+  };
+
+  const editPost = (postId) => {
+    const postToEdit = listsOfPosts.find((post) => post.id === postId);
+    setEditablePostId(postId);
+    setEditablePostText(postToEdit.body);
+  };
+
+  const saveEditedPost = async (postId) => {
+    const updatedPost = {
+      body: editablePostText,
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/posts/${userID}/${postId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedPost),
+      });
+
       if (response.ok) {
-        const listPosts = await response.json();
-        if (listPosts.length === 0) {
-          throw new Error("You have no Posts");
-        }
-        setListsOfPosts(listPosts);
-        return listPosts;
+        const data = await response.json();
+        alert(data.message); // 'Post updated successfully'
+        setEditablePostId(null);
+        getCurrentPosts(); // Fetch the updated list of posts
       } else {
-        throw new Error("Request failed!");
+        throw new Error('Request failed!');
       }
     } catch (error) {
-      alert("" + error);
-    }
-  };
-
-  const editPost = (id) => {
-    const post = listsOfPosts.find(post => post.id === id);
-    if (post) {
-      setEditablePostId(id);
-      setEditablePostText(post.body); // Update with the post's body
-    }
-  }; 
-  
-  const saveEditedPost = async (id) => {
-    const updatedPost = {
-      body: editablePostText
-    };
-  
-    await fetch(
-      `${API_URL}/posts/${userID}/${id}`, 
-      {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(updatedPost)
-      }
-    )
-    .then(response => response.json())
-    .then(data => {
-      alert(data.message); // 'post updated successfully'
-      setEditablePostId(null);
-      setEditablePostText("");
-      getCurrentPosts(); // to get the updated list of posts
-    })
-    .catch(error => {
       alert('Error updating post:', error);
-    });
+    }
   };
- 
- 
-  const handleCreatePost= async()=>{
-    const newPost = {
-      userId: userID,
-      title: newPostTitle,
-      body: newPostBody
-    };
-     
-      await fetch(
-        `${API_URL}/posts`,
-        {method: 'POST',
-         headers: {'Content-Type': 'application/json'},
-         body: JSON.stringify(newPost) })  
-         .then(response => response.json())
-         .then(data => {
-           alert(data.message); // Post created successfully
-         })
-         .catch(error => {
-           alert('Error create post:', error);
-         });
 
-        getCurrentPosts(); //to get the update list of posts
-        setNewPostTitle('');
-        setNewPostBody('');
- 
-     };
+  const deletePost = async (postId) => {
+    try {
+      const response = await fetch(`${API_URL}/posts/${userID}/${postId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message); // 'Post deleted successfully'
+        getCurrentPosts(); // Fetch the updated list of posts
+      } else {
+        throw new Error('Request failed!');
+      }
+    } catch (error) {
+      alert('Error deleting post:', error);
+    }
+  };
+
+  const addComment = async (postId, commentBody) => {
+    const newComment = {
+      postId: postId,
+      body: commentBody,
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newComment),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message); // 'Comment added successfully'
+        getCurrentComments(postId); // Fetch the updated list of comments
+        setNewComment('');
+      } else {
+        throw new Error('Request failed!');
+      }
+    } catch (error) {
+      alert('Error adding comment:', error);
+    }
+  };
+
+  const editComment = async (commentId, commentBody) => {
+    const updatedComment = {
+      body: commentBody,
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/comments/${commentId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedComment),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message); // 'Comment updated successfully'
+        getCurrentComments(selectedPost); // Fetch the updated list of comments
+      } else {
+        throw new Error('Request failed!');
+      }
+    } catch (error) {
+      alert('Error updating comment:', error);
+    }
+  };
 
   return (
     <div>
-       <div>
-      {showNewPostForm ? (
-        <div id="forNewPost">
-          <label htmlFor="postTitle">&emsp;Title:</label>
-          <textarea
-            type="text"
-            id="postTitle"
-            value={newPostTitle}
-            onChange={(e) => setNewPostTitle(e.target.value)}/>
-          <label htmlFor="postBody">Body:</label>
-          <textarea
-            id="postBody"
-            value={newPostBody}
-            onChange={(e) => setNewPostBody(e.target.value)}></textarea>
-          <button onClick={handleCreatePost}>Create Post</button>
-          <button onClick={() => setShowNewPostForm(false)}>Cancel</button>
-        </div>
-      ) : (
-        <button onClick={() =>{ setShowNewPostForm(true); setSelectedPost(null)}}>Click here to add new post</button>
-      )}
-    </div>
-    <div>
-    {listsOfPosts.length > 0 ? (
-  listsOfPosts.map((post) => (
-    <div key={post.id}>
-      <Link to={`/users/${username}/Posts/${post.id}`} onClick={() => togglePost(post.id)}>
-        <button id="title" className={selectedPost === post.id ? "highlighted" : ""}>
-          {post.title}
-        </button>
-      </Link>
-      {selectedPost === post.id && (
-        <>
-          <p id="postBody">
-            &emsp;&emsp;
-            {post.id === editablePostId ? (
+      <h1>Posts</h1>
+
+      {listsOfPosts.map((post) => (
+        <div key={post.id}>
+          <h2>{post.title}</h2>
+          {editablePostId === post.id ? (
+            <div>
               <textarea
                 value={editablePostText}
-                onChange={(event) => setEditablePostText(event.target.value)}
-                rows={Math.ceil(editablePostText.length / 50)} // Adjust the row count based on the length of the text
-                style={{ width: '100%' }} // Set the width to 100% for the textarea
-              />
-            ) : (
-              <span>{post.body}</span>
-            )}
-            <br/>
-            {post.id === editablePostId ? (
-              <button className="forActions" onClick={() => saveEditedPost(post.id)}>Save</button>
-            ) : (
-              <button className="forActions" onClick={() => editPost(post.id)}>Edit</button>
-            )}
-            <button id="btnComments" className="fas" onClick={() => showComments(post.id)}>
-              View the comments &#xf086;
-            </button>
-          </p>
-        </>
-      )}
-      {selectedPost === post.id && comments.length > 0 && (
-        <div id="forComments">
-          {comments.map((comment) => (
-            <p key={comment.id}>
-              &emsp;&emsp; {comment.name} <br /> &emsp;&emsp;{comment.body}
-            </p>
-          ))}
-          <p>
-            <button id="btnComments" className="fas fa-comment" onClick={() => HideComments()}>
-              Hide the comments
-            </button>
-          </p>
+                onChange={(e) => setEditablePostText(e.target.value)}
+              ></textarea>
+              <button onClick={() => saveEditedPost(post.id)}>Save</button>
+            </div>
+          ) : (
+            <>
+              <p>{post.body}</p>
+              <div>
+                <button onClick={() => togglePost(post.id)}>
+                  {selectedPost === post.id ? 'Hide' : 'Show'} Comments
+                </button>
+                <button onClick={() => editPost(post.id)}>Edit Post</button>
+                <button onClick={() => deletePost(post.id)}>Delete Post</button>
+              </div>
+              {selectedPost === post.id && (
+                <>
+                  <h3>Comments:</h3>
+                  {comments.map((comment) => (
+                    <div key={comment.id}>
+                      <p>{comment.body}</p>
+                      <button onClick={() => editComment(comment.id, comment.body)}>
+                        Edit Comment
+                      </button>
+                    </div>
+                  ))}
+                  <div>
+                    <label htmlFor="commentBody">Add Comment:</label>
+                    <textarea
+                      id="commentBody"
+                      onChange={(e) => setNewComment(e.target.value)}
+                    ></textarea>
+                    <button onClick={() => addComment(post.id, newComment)}>
+                      Add Comment
+                    </button>
+                  </div>
+                </>
+              )}
+            </>
+          )}
         </div>
-      )}
-    </div>
-  ))
-) : null
-
-(
-      <p>&emsp; There are no posts</p>
-    )}
+      ))}
+      <div className="back-link">
+        <Link to={`/user/${userID}`}>Back to User Profile</Link>
       </div>
     </div>
   );
 };
 
 export default ViewPostsUser;
-
