@@ -36,11 +36,15 @@ const postRoutes = require('./routes/posts');
 const commentRoutes = require('./routes/comments');
 const todoRoutes = require('./routes/todos');
 const usersRRoutes = require('./routes/usersR');
+const albumsRoutes = require('./routes/albums');
+const photosRoutes = require('./routes/photos');
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/comments', commentRoutes);
 app.use('/todos', todoRoutes);
 app.use('/usersR', usersRRoutes);
+app.use('/albums', albumsRoutes);
+app.use('/photos', photosRoutes);
 
 
 // Start the server
