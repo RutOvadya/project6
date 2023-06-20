@@ -295,7 +295,7 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
       )}
     </div>
   ))
-    ) : null
+    ) : 
     (
       <p>&emsp; There are no posts</p>
     )}

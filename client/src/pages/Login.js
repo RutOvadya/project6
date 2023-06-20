@@ -35,9 +35,9 @@ export default function Login() {
     
     const loginAndSaveToLS = async() => {
         const userAndPassword = await loginFunction();
-        //  if(typeof(userAndPassword)!==Object){
-        //   alert("userAndPassword not exist");
-        //  }
+         if(userAndPassword==undefined){
+          alert("userAndPassword not exist");
+         } else{
         const username= userAndPassword.username_password.name;
         try {
             const response = await fetch(
@@ -59,13 +59,14 @@ export default function Login() {
           } catch (error) {
             alert("" + error);
           }
+        }
     };
 
     return(
         <div id="loginContainer">
             <h1 id="welcome">WELCOME</h1>
             <form>
-                <label className="label" htmlFor="name">name: </label>
+                <label className="label" htmlFor="name">username: </label>
                 <input className="box" type="text" id="username" name="name" required
                 placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
                 <label className="label" htmlFor="password"> password: </label>

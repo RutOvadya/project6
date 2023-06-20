@@ -103,6 +103,7 @@ export default function Register() {
              });
     
          doingRegister(newUser); 
+         backToLogin();
 
         // var listUsers= await getAllUsers();
         // console.log(listUsers);

@@ -5,7 +5,8 @@ import './Photos.css';
 export default function ViewPhotos({ idAlbum, listURL }) {
     const API_URL = 'http://localhost:3000';
     const [current, setCurrent] = useState(0);
-    const length = listURL.length;
+    const [currentPhotos, setCurrentPhotos] = useState([...(listURL || [])]);
+    const length = currentPhotos.length;
 
 
     const getPhotosById = async (id, photoId) => {
@@ -30,7 +31,7 @@ export default function ViewPhotos({ idAlbum, listURL }) {
         
   const nextSlide = async() => {
     const nextPhoto = await getPhotosById(idAlbum, length);
-    listURL.push(nextPhoto.photo.thumbnailUrl);
+    currentPhotos.push(nextPhoto.photo.thumbnailUrl);
     setCurrent(current === length  ? 0 : current + 1);
   };
 
@@ -38,14 +39,15 @@ export default function ViewPhotos({ idAlbum, listURL }) {
     setCurrent(current === 0 ? length - 1 : current - 1);
   };
 
-  if (!Array.isArray(listURL) || listURL.length <= 0) {
+  if (!Array.isArray(currentPhotos) || currentPhotos.length <= 0) {
     return null;
   }
 
 
   // const deletePhoto= async(id)=>{
+
   //   await fetch(
-  //     `${API_URL}/photos/${idAlbum}/${id}`, 
+  //     `${API_URL}/photos/${idAlbum}/${50*(idAlbum-1)+1}`, 
   //     {method: 'DELETE',
   //     headers: {'Content-Type': 'application/json'} })
   //   .then(response => response.json())
@@ -55,8 +57,9 @@ export default function ViewPhotos({ idAlbum, listURL }) {
   //   .catch(error => {
   //     alert('Error deleting photo:', error);
   //   });
-
-  //   getCurrentPhotos(); //to get the update list of album
+  //   var newListPhotos = currentPhotos.slice(0, id).concat(currentPhotos.slice(id + 1));
+  //   setCurrentPhotos(newListPhotos);
+  //   //nextSlide();
   // };
 
 
@@ -65,7 +68,7 @@ export default function ViewPhotos({ idAlbum, listURL }) {
       <FaArrowAltCircleLeft className='left-arrow' onClick={prevSlide} />
       <FaArrowAltCircleRight className='right-arrow' onClick={nextSlide} />
       { length>0 ? (
-      listURL.map((slide, index) => {
+      currentPhotos.map((slide, index) => {
         return (
           <div
             className={index === current ? 'slide active' : 'slide'}
