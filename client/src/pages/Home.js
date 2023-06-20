@@ -88,6 +88,26 @@ export default function Home(){
     }
   };
 
+  const getNotCompletedTodosById = async (id) => {
+    try {
+      const response = await fetch(
+        `${API_URL}/todos/${id}/0`,
+        { method: 'GET'}
+      );
+      if (response.ok) {
+        const listTodos = await response.json();
+        if (listTodos.length === 0) {
+          throw new Error("You have no Todos");
+        }
+        return listTodos;
+      } else {
+        throw new Error("Request failed!");
+      }
+    } catch (error) {
+      alert("" + error);
+    }
+  };
+
   const showInfo = () => {
     const object = getCurrentUser();
     setContentValue(<ViewInfoUser user={object} />);
@@ -101,8 +121,14 @@ export default function Home(){
 
   const showTodos = async () => {
     const object = getCurrentUser();
+    var res= window.confirm("Do you want just the not comleted todos?");
+    if(!res){
     const listTodos = await getTodosById(object.id);
     setContentValue(<ViewTodosUser listTodos={listTodos} userID={object.id}/>);
+    } else{
+      const listTodos = await getNotCompletedTodosById(object.id);
+      setContentValue(<ViewTodosUser listTodos={listTodos} userID={object.id}/>);
+    }
   };
 
   const showAlbums = async () => {

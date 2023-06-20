@@ -23,6 +23,19 @@ router.get('/:userId', (req,res) => {
   });
 });
 
+// Get all completed todos of userId
+router.get('/:userId/0', (req,res) => {
+  const userId = req.params.userId;
+db.query('SELECT * FROM todos WHERE userId = ? AND completed = ?', [userId, 0], (err, results) => {
+  if (err) {
+    console.error('Error getting todos: ', err);
+    res.status(500).json({ error: 'Error getting todos' });
+    return;
+  }
+  res.json(results);
+});
+});
+
 // Get a specific todo of userId
 router.get('/:userId/:id', (req, res) => {
   const userId = req.params.userId;
