@@ -250,26 +250,7 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
                   {selectedPost === post.id ? 'Show' : 'Hide' } Comments
                 </button>
                 <button className="fas" onClick={() => editPost(post.id)}>Edit Post</button>
-              </div>
-              </>
-            )}
-          </p>
-        </>
-      )}
-      {selectedPost === post.id && comments.length > 0 && (
-        <div id="forComments">
-          {comments.map((comment) => (
-            <p key={comment.id}>
-              &emsp;&emsp; {comment.name} <br /> &emsp;&emsp;{comment.body}
-            </p>
-            
-          ))}
-          <p>
-            <button id="btnComments" className="fas fa-comment" onClick={() => {HideComments(); setShowNewCommentForm(false)}}>
-              Hide the comments
-            </button>
-            <div>
-      {showNewCommentForm ? (
+                {showNewCommentForm ? (
         <div id="forNewComment">
           <label htmlFor="postTitle">&emsp;Name:</label>
           <textarea
@@ -286,11 +267,29 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
           <button onClick={() => setShowNewCommentForm(false)}>Cancel</button>
         </div>
       ) : (
-         <button id="btnComments" onClick={() =>setShowNewCommentForm(true)}>Click here to add new comment</button>
+         <button className="fas" onClick={() =>setShowNewCommentForm(true)}>Add new comment</button>
       )}
+              </div>
+              </>
+            )}
+          </p>
+        </>
+      )}
+      {selectedPost === post.id && comments.length > 0 && (
+        <div id="forComments">
+          {comments.map((comment) => (
+            <p key={comment.id}>
+              &emsp;&emsp; {comment.name} <br /> &emsp;&emsp;{comment.body}
+            </p>
+            
+          ))}
+          <p>
+            <button className="fas" onClick={() => {HideComments(); setShowNewCommentForm(false)}}>
+              Hide the comments
+            </button>
+            <div>
+     
     </div>
-            {/* <button id="btnComments" onClick={() => addComment(post.id)} title="Add comment">
-             <i className='fas'>&#xf27a;</i>Add comment</button> */}
           </p>
         </div>
       )}

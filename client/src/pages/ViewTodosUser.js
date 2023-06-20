@@ -11,6 +11,7 @@ const ViewTodosUser = ({ listTodos, userID }) => {
   const [newTodoCompleted, setNewTodoCompleted] = useState(true);
   const [editableTodoId, setEditableTodoId] = useState(null);
   const [editableTodoText, setEditableTodoText] = useState("");
+ // const [editableTodoCompleted, setEditableTodoCompleted] = useState(true);
 
   const API_URL = 'http://localhost:3000';
 
@@ -49,7 +50,7 @@ const ViewTodosUser = ({ listTodos, userID }) => {
   const handleChange = async(id, title, completed, isChecked) => {
     const updateTodo = {
       title: title,
-      completed: completed
+      completed: !completed
     };
      
     await fetch(
@@ -111,12 +112,14 @@ const ViewTodosUser = ({ listTodos, userID }) => {
   if (todo) {
     setEditableTodoId(id);
     setEditableTodoText(todo.title);
+    
   }
 };
 
-const saveEditedTodo = async (id) => {
+const saveEditedTodo = async (id, completed) => {
   const updatedTodo = {
-    title: editableTodoText
+    title: editableTodoText,
+    completed: completed
   };
 
   await fetch(
@@ -213,7 +216,7 @@ const saveEditedTodo = async (id) => {
       <br></br>
       &emsp; 
       {todo.id === editableTodoId ? (
-        <button className="forActions" onClick={() => saveEditedTodo(todo.id)}>Save</button>
+        <button className="forActions" onClick={() => saveEditedTodo(todo.id, todo.completed)}>Save</button>
       ) : (
         <button className="forActions" onClick={() => editTODO(todo.id)}>Edit</button>
       )}
