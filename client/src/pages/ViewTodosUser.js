@@ -49,7 +49,7 @@ const ViewTodosUser = ({ listTodos, userID }) => {
   const handleChange = async(id, title, completed, isChecked) => {
     const updateTodo = {
       title: title,
-      completed: !completed
+      completed: completed
     };
      
     await fetch(
