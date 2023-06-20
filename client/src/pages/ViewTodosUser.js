@@ -88,6 +88,8 @@ const ViewTodosUser = ({ listTodos, userID }) => {
   };
 
   const deleteTODO= async(id)=>{
+    var res=window.confirm("Aro you sure to delete this todo?");
+    if(res){
     await fetch(
       `${API_URL}/todos/${userID}/${id}`, 
       {method: 'DELETE',
@@ -101,6 +103,7 @@ const ViewTodosUser = ({ listTodos, userID }) => {
     });
 
     getCurrentTodos(); //to get the update list of todos
+  }
   };
 
   const editTODO = (id) => {
@@ -214,7 +217,8 @@ const saveEditedTodo = async (id) => {
       ) : (
         <button className="forActions" onClick={() => editTODO(todo.id)}>Edit</button>
       )}
-      <button className="forActions" onClick={() => deleteTODO(todo.id)}>Delete</button>
+      <button className="forActions" onClick={() => deleteTODO(todo.id)}title="Delete this Todo">
+             <i className='fas'>&#xf2ed;</i></button>
     </p>
           </div>
         ))) : (

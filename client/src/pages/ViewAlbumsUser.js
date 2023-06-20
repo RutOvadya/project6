@@ -85,6 +85,8 @@ export default function ViewAlbumsUser({ listAlbums, username, userID }) {
 
        
   const deleteAlbum= async(id)=>{
+    var res=window.confirm("Aro you sure to delete this album?");
+    if(res){
     await fetch(
       `${API_URL}/albums/${userID}/${id}`, 
       {method: 'DELETE',
@@ -96,8 +98,8 @@ export default function ViewAlbumsUser({ listAlbums, username, userID }) {
     .catch(error => {
       alert('Error deleting album:', error);
     });
-
     getCurrentAlbums(); //to get the update list of album
+  }
   };
 
 

@@ -16,6 +16,11 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
   const [editablePostId, setEditablePostId] = useState(null);
   const [editablePostText, setEditablePostText] = useState("");
 
+
+  const [showNewCommentForm, setShowNewCommentForm] = useState(false);
+  const [newCommentName, setNewCommentName] = useState('');
+  const [newCommentBody, setNewCommentBody] = useState('');
+
   const getCurrentComments = async (id) => {
     try {
       const response = await fetch(
@@ -115,23 +120,52 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
   };
  
   const deletePost = async (postId) => {
-    try {
-      const response = await fetch(`${API_URL}/posts/${userID}/${postId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        alert(data.message); // 'Post deleted successfully'
-        getCurrentPosts(); // Fetch the updated list of posts
-      } else {
-        throw new Error('Request failed!');
-      }
-    } catch (error) {
-      alert('Error deleting post:', error);
-    }
+    var res=window.confirm("Aro you sure to delete this post?");
+    if(res){
+    await fetch(
+      `${API_URL}/posts/${postId}`, 
+      {method: 'DELETE',
+      headers: {'Content-Type': 'application/json'} })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message); // 'Post deleted successfully'd
+    })
+    .catch(error => {
+      alert('Error deleting album:', error);
+    });
+    getCurrentPosts(); //to get the update list of album
+  }
   };
+
+  const handleCreateComment= async(postId)=>{
+    const user = localStorage.getItem("currentUser");
+    const objUser = JSON.parse(user);
+    const email= objUser.email;
+    
+    const newComment = {
+      name: newCommentName,
+      email: email,
+      body: newCommentBody
+    };
+     
+      await fetch(
+        `${API_URL}/comments/${postId}`,
+        {method: 'POST',
+         headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify(newComment) })  
+         .then(response => response.json())
+         .then(data => {
+           alert(data.message); // Comments created successfully
+         })
+         .catch(error => {
+           alert('Error create comment:', error);
+         });
+
+        getCurrentComments(postId); //to get the update list of comments
+         setNewCommentBody('');
+         setNewCommentName('');
+
+     };
   
   const handleCreatePost= async()=>{
     const newPost = {
@@ -156,7 +190,7 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
         getCurrentPosts(); //to get the update list of posts
         setNewPostTitle('');
         setNewPostBody('');
- 
+
      };
 
   return (
@@ -190,6 +224,8 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
         <button id="title" className={selectedPost === post.id ? "highlighted" : ""}>
           {post.title}
         </button>
+        <button id="deletePost" onClick={() => deletePost(post.id)} title="Delete this Post">
+             <i className='fas'>&#xf2ed;</i></button>
       </Link>
       {selectedPost === post.id && (
         <>
@@ -214,7 +250,6 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
                   {selectedPost === post.id ? 'Show' : 'Hide' } Comments
                 </button>
                 <button className="fas" onClick={() => editPost(post.id)}>Edit Post</button>
-                <button className="fas" onClick={() => deletePost(post.id)}>Delete Post</button>
               </div>
               </>
             )}
@@ -227,19 +262,42 @@ const ViewPostsUser = ({ listPosts, username, userID }) => {
             <p key={comment.id}>
               &emsp;&emsp; {comment.name} <br /> &emsp;&emsp;{comment.body}
             </p>
+            
           ))}
           <p>
-            <button id="btnComments" className="fas fa-comment" onClick={() => HideComments()}>
+            <button id="btnComments" className="fas fa-comment" onClick={() => {HideComments(); setShowNewCommentForm(false)}}>
               Hide the comments
             </button>
+            <div>
+      {showNewCommentForm ? (
+        <div id="forNewComment">
+          <label htmlFor="postTitle">&emsp;Name:</label>
+          <textarea
+            type="text"
+            id="commentName"
+            value={newCommentName}
+            onChange={(e) => setNewCommentName(e.target.value)}/>
+          <label htmlFor="commentBody">Body:</label>
+          <textarea
+            id="commentBody"
+            value={newCommentBody}
+            onChange={(e) => setNewCommentBody(e.target.value)}></textarea>
+          <button onClick={()=>handleCreateComment(post.id)}>Create comment</button>
+          <button onClick={() => setShowNewCommentForm(false)}>Cancel</button>
+        </div>
+      ) : (
+         <button id="btnComments" onClick={() =>setShowNewCommentForm(true)}>Click here to add new comment</button>
+      )}
+    </div>
+            {/* <button id="btnComments" onClick={() => addComment(post.id)} title="Add comment">
+             <i className='fas'>&#xf27a;</i>Add comment</button> */}
           </p>
         </div>
       )}
     </div>
   ))
-) : null
-
-(
+    ) : null
+    (
       <p>&emsp; There are no posts</p>
     )}
       </div>

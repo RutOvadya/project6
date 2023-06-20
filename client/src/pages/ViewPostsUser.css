@@ -44,3 +44,8 @@
     overflow-y: hidden;
     border-radius: 1.5em;
 }
+
+#deletePost{
+    color: blue;
+    background-color: rgba(0,0,0,0);
+}
