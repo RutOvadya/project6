@@ -169,3 +169,6 @@
 
 # GET http://localhost:3000/photos/1/50
 # Content-Type: application/json
+
+GET http://localhost:3000/todos/2/0
+Content-Type: application/json
